@@ -1,16 +1,33 @@
-"""
-ASGI config for server project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
-"""
-
 import os
 
-from django.core.asgi import get_asgi_application
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import OriginValidator
+from django.urls import path
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
+from server import settings
+from server.consumers import EchoConsumer
 
-application = get_asgi_application()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
+
+# source:
+# https://esketchers.com/django-websockets-a-complete-beginners-guide/
+
+application = ProtocolTypeRouter(
+    {
+        "websocket": AuthMiddlewareStack(
+            OriginValidator(
+                URLRouter(
+                    [
+                        path("opa/", EchoConsumer.as_asgi()),
+                    ]
+                ),
+                settings.ALLOWED_HOSTS,
+            )
+        ),
+    }
+)
+
+# to test run in browser:
+# ws = new WebSocket("ws://localhost:8000/opa/")
+
