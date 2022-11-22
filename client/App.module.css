@@ -36,6 +36,14 @@
     background: var(--mid);
 }
 
-.active {
+.buttonMe {
+    width: 200px;
+    height: 50px;
     background: var(--hightlight);
+}
+
+.buttonHim {
+    width: 200px;
+    height: 50px;
+    background: var(--light);
 }

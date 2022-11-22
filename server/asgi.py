@@ -15,11 +15,15 @@ from django.urls import path
 
 from server.app.consumers import PracticeConsumer
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": URLRouter([
-        path('practice', PracticeConsumer.as_asgi()),
-    ])
-})
+application = ProtocolTypeRouter(
+    {
+        "http": get_asgi_application(),
+        "websocket": URLRouter(
+            [
+                path("buttons/", PracticeConsumer.as_asgi()),
+            ]
+        ),
+    }
+)
